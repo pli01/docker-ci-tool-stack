@@ -10,7 +10,12 @@ volumes:
 
 services:
   nexus:
-    build: ./docker-nexus3
+    image: sonatype/nexus3
+    build:
+      context: ./docker-nexus3
+      args:
+        - http_proxy=$http_proxy
+        - https_proxy=$https_proxy
     restart: always
     ports:
       - "18081:8081"
@@ -19,7 +24,11 @@ services:
     volumes:
       - nexus-data:/nexus-data
   jenkins:
-    build: ./jenkins
+    build:
+      context: ./jenkins
+      args:
+        - http_proxy=$http_proxy
+        - https_proxy=$https_proxy
     restart: always
     ports:
       - "18080:8080"
@@ -31,53 +40,53 @@ services:
       - jenkins-data:/var/lib/jenkins/
     depends_on:
       - nexus
-      - sonar
+#      - sonar
     environment:
       - NEXUS_PORT=8081
       - SONAR_PORT=9000
       - SONAR_DB_PORT=5432
-  sonardb:
-    networks:
-      - prodnetwork
-    restart: always
-    image: postgres:9.6
-    ports:
-      - "5432:5432"
-    environment:
-     - POSTGRES_USER=sonar
-     - POSTGRES_PASSWORD=sonar
-  sonar:
-    image: sonarqube
-    restart: always
-    ports:
-     - "19000:9000"
-     - "19092:9092"
-    networks:
-      - prodnetwork
-    depends_on:
-      - sonardb
-    environment:
-     - SONARQUBE_JDBC_URL=jdbc:postgresql://sonardb:5432/sonar
-     - SONARQUBE_JDBC_USERNAME=sonar
-     - SONARQUBE_JDBC_PASSWORD=sonar
+#  sonardb:
+#    networks:
+#      - prodnetwork
+#    restart: always
+#    image: postgres:9.6
+#    ports:
+#      - "5432:5432"
+#    environment:
+#     - POSTGRES_USER=sonar
+#     - POSTGRES_PASSWORD=sonar
+#  sonar:
+#    image: sonarqube
+#    restart: always
+#    ports:
+#     - "19000:9000"
+#     - "19092:9092"
+#    networks:
+#      - prodnetwork
+#    depends_on:
+#      - sonardb
+#    environment:
+#     - SONARQUBE_JDBC_URL=jdbc:postgresql://sonardb:5432/sonar
+#     - SONARQUBE_JDBC_USERNAME=sonar
+#     - SONARQUBE_JDBC_PASSWORD=sonar
 
 ##########################################################################################
 # DISABLED: GitLab takes too much memory and CPU. Demo uses GitHub repositories instead.
 #
-#  gitlab:
-#    image: gitlab/gitlab-ce:latest
-#    restart: always
-#    networks:
-#      - prodnetwork
-#    environment:
-#      GITLAB_OMNIBUS_CONFIG: |
-#        # external_url 'https://gitlab.example.com'
-#        # Add any other gitlab.rb configuration here, each on its own line
-#    ports:
-#      - "10080:80"
-#      - "10443:443"
-#      - "10022:22"
-#    volumes:
-#      - /opt/gitlab/config:/etc/gitlab
-#      - /opt/gitlab/logs:/var/log/gitlab
-#      - /opt/gitlab/data:/var/opt/gitlab
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    networks:
+      - prodnetwork
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # external_url 'https://gitlab.example.com'
+        # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      - "10080:80"
+      - "10443:443"
+      - "10022:22"
+    volumes:
+      - /opt/gitlab/config:/etc/gitlab
+      - /opt/gitlab/logs:/var/log/gitlab
+      - /opt/gitlab/data:/var/opt/gitlab
