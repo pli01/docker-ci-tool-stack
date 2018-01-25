@@ -1,3 +1,4 @@
+sudo docker pull nginx
 sudo docker pull sonatype/nexus3
 sudo docker pull gitlab/gitlab-ce:latest
 sudo docker pull jenkins/jenkins:lts
