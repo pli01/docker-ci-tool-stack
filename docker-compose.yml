@@ -43,6 +43,7 @@ services:
       - nexus-data:/nexus-data
     environment:
       - NEXUS_CONTEXT=nexus
+#      - INSTALL4J_ADD_VM_PARAMS="-Xms2g -Xmx2g -XX:MaxDirectMemorySize=3g -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
   jenkins:
     build:
       context: ./jenkins
