@@ -21,7 +21,7 @@ services:
       - jenkins
       - gitlab
     ports:
-      - "80/tcp:80/tcp"
+      - "80:80"
     networks:
       - prodnetwork
     volumes:
