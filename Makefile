@@ -5,10 +5,10 @@ sudo ?= sudo -E
 compose_args += -f docker-compose.yml
 compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-compose.$(env).yml")
 
-all: stop rm build up
+all: stop rm pull up
 clean:
 	echo $(sudo) docker system prune -f
-build:
+pull:
 	$(sudo) docker-compose $(compose_args) pull
 up:
 	$(sudo) docker-compose $(compose_args) up -d
