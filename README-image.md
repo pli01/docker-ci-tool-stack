@@ -29,7 +29,10 @@ jenkins
 https://github.com/jenkinsci/docker/blob/master/README.md
 gitlab
 https://docs.gitlab.com/omnibus/docker/README.html
+
 nexus:
 https://github.com/sonatype/docker-nexus3
-
+nexus-repository: config
+https://github.com/sonatype/nexus-book-examples/tree/nexus-3.x/scripting
 https://github.com/sonatype-nexus-community/docker-nginx-nexus-repository/blob/master/nexus.sh
+

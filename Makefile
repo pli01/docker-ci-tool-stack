@@ -7,7 +7,7 @@ compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-com
 
 all: stop rm up
 clean:
-	echo $(sudo) docker system prune -f
+	$(sudo) docker system prune -f
 build:
 	$(sudo) docker-compose $(compose_args) build
 pull:
