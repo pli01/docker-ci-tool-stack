@@ -10,22 +10,26 @@ volumes:
 
 services:
   front:
-    image: nginx:latest
+#    image: nginx:latest
+    build:
+      context: ./nginx
+      args:
+        - http_proxy=$http_proxy
+        - https_proxy=$https_proxy
+
     restart: always
     depends_on:
+#      - gitlab
       - jenkins
-      - gitlab
       - nexus
     links:
-      - nexus
+#      - gitlab
       - jenkins
-      - gitlab
+      - nexus
     ports:
       - "80:80"
     networks:
       - prodnetwork
-    volumes:
-      - ./nginx/jenkins_80.conf:/etc/nginx/conf.d/default.conf
   nexus:
     image: sonatype/nexus3
     build:
