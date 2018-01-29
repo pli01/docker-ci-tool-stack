@@ -1,0 +1,5 @@
+{
+  "name": "CreateRepositoryHosted",
+  "type": "groovy",
+  "content": "repository.createRawProxy('gitlab','https://packages.gitlab.com/gitlab/gitlab-ce','default', true );"
+}

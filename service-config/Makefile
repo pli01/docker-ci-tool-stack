@@ -1,4 +1,4 @@
-project ?= ci-tool-stack
+project ?=
 env ?= dev
 sudo ?= sudo -E
 

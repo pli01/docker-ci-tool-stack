@@ -36,3 +36,4 @@ nexus-repository: config
 https://github.com/sonatype/nexus-book-examples/tree/nexus-3.x/scripting
 https://github.com/sonatype-nexus-community/docker-nginx-nexus-repository/blob/master/nexus.sh
 
+https://github.com/savoirfairelinux/ansible-nexus3-oss/tree/master/files/groovy

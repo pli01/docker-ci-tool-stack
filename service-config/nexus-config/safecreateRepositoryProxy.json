@@ -1,0 +1,5 @@
+{
+  "name": "safecreateRepositoryProxy",
+  "type": "groovy",
+  "content": "import org.sonatype.nexus.repository.Repository; import org.sonatype.nexus.repository.manager.RepositoryManager; def repositoryManager = container.lookup(RepositoryManager.class.name); def existingRepos = repositoryManager.browse().collect { Repository repository -> repository.name }; if(! existingRepos.contains('gitlab')){ repository.createRawProxy('gitlab','https://packages.gitlab.com/gitlab/gitlab-ce','default', true ); }"
+}
