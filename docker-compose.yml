@@ -9,6 +9,28 @@ volumes:
   jenkins-data:
 
 services:
+  service-config:
+    build:
+      context: ./service-config
+      args:
+        - http_proxy=$http_proxy
+        - https_proxy=$https_proxy
+    restart: always
+    depends_on:
+      - front
+      - gitlab
+      - jenkins
+      - nexus
+    links:
+      - front
+      - gitlab
+      - jenkins
+      - nexus
+    networks:
+      - prodnetwork
+    entrypoint: /docker-entrypoint.sh service-config
+    environment:
+      - nexus=http://nexus:8081/nexus
   front:
 #    image: nginx:latest
     build:
@@ -19,11 +41,11 @@ services:
 
     restart: always
     depends_on:
-#      - gitlab
+      - gitlab
       - jenkins
       - nexus
     links:
-#      - gitlab
+      - gitlab
       - jenkins
       - nexus
     ports:
