@@ -15,6 +15,7 @@ services:
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
+        - no_proxy=$no_proxy
     restart: always
     depends_on:
       - front
@@ -30,7 +31,10 @@ services:
       - prodnetwork
     entrypoint: /docker-entrypoint.sh service-config
     environment:
-      - nexus=http://nexus:8081/nexus
+      - http_proxy=$http_proxy
+      - https_proxy=$https_proxy
+      - no_proxy=$no_proxy,nexus
+      - nexus_url=http://nexus:8081/nexus
   front:
 #    image: nginx:latest
     build:
@@ -38,6 +42,7 @@ services:
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
+        - no_proxy=$no_proxy
 
     restart: always
     depends_on:
@@ -76,6 +81,7 @@ services:
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
+        - no_proxy=$no_proxy
     restart: always
     ports:
       - "18080:8080"
@@ -126,28 +132,28 @@ services:
     restart: always
     networks:
       - prodnetwork
-    environment:
-      GITLAB_ROOT_PASSWORD: mypassword
-      GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://mysite'
-        gitlab_rails['gitlab_email_display_name'] = 'Gitlab'
-        gitlab_rails['gitlab_email_from'] = 'noreply@forge.factory'
-        gitlab_rails['ldap_allow_username_or_email_login'] = true
-        gitlab_rails['ldap_base'] = 'ou=People,dc=org'
-        gitlab_rails['ldap_bind_dn'] = 'cn=admin,ou=Meta,dc=org'
-        gitlab_rails['ldap_enabled'] = true
-        gitlab_rails['ldap_host'] = 'ldaphost'
-        gitlab_rails['ldap_method'] = 'plain'
-        gitlab_rails['ldap_password'] = 'cloud'
-        gitlab_rails['ldap_port'] = '389'
-        gitlab_rails['ldap_uid'] = 'uid'
-        gitlab_rails['time_zone'] = 'Europe/Paris'
-        # deprecated
-        gitlab_rails['gravatar_enabled'] = false
-        gitlab_rails['gitlab_signup_enabled'] = false
-        gitlab_rails['gitlab_signin_enabled'] = false
-        # external_url 'https://gitlab.example.com'
-        # Add any other gitlab.rb configuration here, each on its own line
+#    environment:
+##      GITLAB_ROOT_PASSWORD: mypassword
+##      GITLAB_OMNIBUS_CONFIG: |
+##        external_url 'http://mysite'
+##        gitlab_rails['gitlab_email_display_name'] = 'Gitlab'
+##        gitlab_rails['gitlab_email_from'] = 'noreply@forge.factory'
+##        gitlab_rails['ldap_allow_username_or_email_login'] = true
+##        gitlab_rails['ldap_base'] = 'ou=People,dc=org'
+##        gitlab_rails['ldap_bind_dn'] = 'cn=admin,ou=Meta,dc=org'
+##        gitlab_rails['ldap_enabled'] = true
+##        gitlab_rails['ldap_host'] = 'ldaphost'
+##        gitlab_rails['ldap_method'] = 'plain'
+##        gitlab_rails['ldap_password'] = 'cloud'
+##        gitlab_rails['ldap_port'] = '389'
+##        gitlab_rails['ldap_uid'] = 'uid'
+##        gitlab_rails['time_zone'] = 'Europe/Paris'
+##        # deprecated
+##        gitlab_rails['gravatar_enabled'] = false
+##        gitlab_rails['gitlab_signup_enabled'] = false
+##        gitlab_rails['gitlab_signin_enabled'] = false
+##        # external_url 'https://gitlab.example.com'
+##        # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - "10080:80"
       - "10443:443"
