@@ -39,10 +39,19 @@ https://docs.gitlab.com/omnibus/docker/README.html
 
 * nexus:
 https://github.com/sonatype/docker-nexus3
+
+* service-config: execute postconfiguration for all services (nexus via API, gitlab...)
 nexus-repository: config
 https://github.com/sonatype/nexus-book-examples/tree/nexus-3.x/scripting
 https://github.com/sonatype-nexus-community/docker-nginx-nexus-repository/blob/master/nexus.sh
-
 https://github.com/savoirfairelinux/ansible-nexus3-oss/tree/master/files/groovy
+https://github.com/pli01/ansible-nexus3-oss/tree/master/files/groovy
 
-* service-config: execute postconfiguration for all services (nexus via API, gitlab...)
+gitlab
+https://docs.gitlab.com/ce/api/settings.html
+
+http://docs.ansible.com/ansible/latest/gitlab_group_module.html
+http://docs.ansible.com/ansible/latest/gitlab_user_module.html
+http://docs.ansible.com/ansible/latest/gitlab_project_module.html
+https://github.com/peay/ansible-gitlab-ci-variables/blob/master/tasks/ci_variable.yaml
+
