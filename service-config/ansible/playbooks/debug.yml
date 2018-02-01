@@ -1,0 +1,8 @@
+---
+- name: Apply nexus_configure
+  hosts: localhost
+  tasks:
+    - debug:
+        var: ansible_env.http_proxy
+    - debug:
+        var: http_proxy_host

@@ -1,0 +1,6 @@
+---
+- name: Configure nexus
+  hosts: nexus
+  roles:
+#    - nexus_configure
+    - nexus3-oss

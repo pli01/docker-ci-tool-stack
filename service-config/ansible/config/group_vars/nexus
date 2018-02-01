@@ -1,0 +1,45 @@
+---
+nexus_with_http_proxy: true
+nexus_http_proxy_host: '{{ ansible_env.http_proxy_host | default("localhost") }}'
+nexus_http_proxy_port: '{{ ansible_env.http_proxy_port | default("480") }}'
+nexus_https_proxy_host: '{{ ansible_env.https_proxy_host | default("localhost") }}'
+nexus_https_proxy_port: '{{ ansible_env.https_proxy_port | default("480") }}'
+nexus_default_host: nexus
+nexus_admin_password: 'admin123'
+
+nexus_anonymous_access: true
+nexus_config_docker: true
+nexus_delete_default_repos: true
+
+ldap_connections:
+  - ldap_name: 'My Company LDAP' # used as a key to update the ldap config
+    ldap_protocol: 'ldap' # ldap or ldaps
+    ldap_hostname: '{{ ansible_env.LDAP_HOST | default("localhost") }}'
+    ldap_port: '{{ ansible_env.LDAP_PORT | default("389") }}'
+    ldap_auth: 'simple' #or 'none'
+    #ldap_auth_username: # 'username' (or DN)   (optional)
+    ldap_auth_username: '{{ ansible_env.LDAP_BIND_DN | default("cn=admin,ou=base,dc=test") }}'
+    ldap_auth_password: '{{ ansible_env.LDAP_PASSWORD | default("test") }}'
+    ldap_search_base: '{{ ansible_env.LDAP_BASE | default("ou=base,dc=test") }}'
+    ldap_user_base_dn: '{{ ansible_env.LDAP_BASE_DN | default("ou=people") }}'
+#    ldap_user_filter: '(cn=*)' # (optional)
+    ldap_user_object_class: 'inetOrgPerson'
+    ldap_user_id_attribute: 'uid'
+    ldap_user_real_name_attribute: 'cn'
+    ldap_user_email_attribute: 'mail'
+    ldap_map_groups_as_roles: true
+    ldap_group_base_dn: 'ou=groups'
+    ldap_group_object_class: 'posixGroup'
+    ldap_group_id_attribute: 'cn'
+    ldap_group_member_attribute: 'memberUid'
+    ldap_group_member_format: '${username}'
+
+
+nexus_local_users:
+  - username: jenkins # used as key to update
+    first_name: Jenkins
+    last_name: CI
+    email: ci@test.com
+    password: "s3cr3t"
+    roles:
+      - developers
