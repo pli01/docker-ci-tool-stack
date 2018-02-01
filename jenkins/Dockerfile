@@ -43,3 +43,17 @@ COPY config/ssh-keys/cd-demo.pub /usr/share/jenkins/ref/.ssh/id_rsa.pub
 # tell Jenkins that no banner prompt for pipeline plugins is needed
 # see: https://github.com/jenkinsci/docker#preinstalling-plugins
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+# Customize jenkins at startup
+USER root
+# install package requirements
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder
+# drop back to the regular jenkins user - good practice
+USER jenkins
+# install pip requirements
+#COPY requirements.txt /usr/share/jenkins/requirements.txt
+#RUN pip install -r /usr/share/jenkins/requirements.txt
+
+RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
+COPY init.groovy.d/ /usr/share/jenkins/ref/init.groovy.d/
