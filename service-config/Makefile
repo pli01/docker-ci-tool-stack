@@ -10,8 +10,11 @@ clean:
 	$(sudo) docker system prune -f
 config:
 	$(sudo) docker-compose $(compose_args) config
-build:
+
+build: prepare
 	$(sudo) docker-compose $(compose_args) build
+prepare:
+	( cd ansible && ansible-galaxy install -r requirements.yml -p . )
 pull:
 	$(sudo) docker-compose $(compose_args) pull
 up:
