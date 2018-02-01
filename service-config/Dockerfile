@@ -1,7 +1,5 @@
 FROM debian:latest
 ENV DEBIAN_FRONTEND noninteractive
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
 
 RUN apt-get -q update && \
     apt-get install -qy --no-install-recommends --force-yes \
@@ -13,6 +11,12 @@ RUN apt-get -q update && \
 ADD nexus /opt/nexus
 ADD nexus-config /opt/nexus-config
 COPY nexus-config.sh /opt/
-ENV nexus http://localhost:8081/nexus
+ADD ansible /opt/ansible
+COPY run.sh /opt/run.sh
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENV nexus_url http://localhost:8081/nexus
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
