@@ -8,6 +8,8 @@ compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-com
 all: stop rm up
 clean:
 	$(sudo) docker system prune -f
+config:
+	$(sudo) docker-compose $(compose_args) config
 build:
 	$(sudo) docker-compose $(compose_args) build
 pull:
@@ -23,6 +25,10 @@ stop:
 logs:
 	$(sudo) docker-compose $(compose_args) logs
 
-test:
-	echo $(compose_args)
+test: unit-test
+	@echo '$@ SUCCESS'
 
+unit-test:
+	@echo '$@ STARTING'
+	( cd tests && bash unit-test.sh )
+	@echo '$@ SUCCESS'
