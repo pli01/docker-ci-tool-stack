@@ -13,18 +13,18 @@
 # limitations under the License.
 
 nexus=${nexus:-http://nexus/nexus}
-
+prefix=$(dirname $0)
 echo "Wait $nexus ready ?"
 until curl --fail --insecure $nexus ; do 
   sleep 1
 done
 
 echo "Start config for $nexus"
-for file in nexus-config/*.json ; do
+for file in $prefix/nexus-config/*.json ; do
   task=$(basename $file .json)
-  ./nexus/delete.sh $task
-  ./nexus/create.sh $file
-  ./nexus/run.sh $task
-  ./nexus/delete.sh $task
+  $prefix/nexus/delete.sh $task
+  $prefix/nexus/create.sh $file
+  $prefix/nexus/run.sh $task
+  $prefix/nexus/delete.sh $task
 done
 echo "End config for $nexus"
