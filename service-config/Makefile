@@ -14,7 +14,7 @@ config:
 build: prepare
 	$(sudo) docker-compose $(compose_args) build
 prepare:
-	( cd ansible && ansible-galaxy install -r requirements.yml -p . )
+	( cd ansible && ansible-galaxy install -r requirements.yml -p roles )
 pull:
 	$(sudo) docker-compose $(compose_args) pull
 up:
