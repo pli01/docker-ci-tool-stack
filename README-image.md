@@ -22,7 +22,13 @@
 | Docker registry Nexus | http://ip/ | http://localhost:19081/ | admin/admin123 |
 | service-config | no access | | |
 
-Custo docker-compose.yml with ENV
+Custom configuration use ENV file
+
+create docker-compose.${ENV}.yml
+create ${ENV}-config.env
+
+make sudo= env=dev build  pull up
+make sudo= env=stage build SERVICE=service-config up
 
 * nginx:
 https://blog.docker.com/2015/04/tips-for-deploying-nginx-official-image-with-docker/

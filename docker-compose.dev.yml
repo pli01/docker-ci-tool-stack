@@ -1,0 +1,8 @@
+version: '3'
+services:
+  service-config:
+    env_file:
+      - ./dev-config.env
+  gitlab:
+    env_file:
+      - ./dev-config.env

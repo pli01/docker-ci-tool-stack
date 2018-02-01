@@ -11,21 +11,19 @@ clean:
 config:
 	$(sudo) docker-compose $(compose_args) config
 build: config
-	$(sudo) docker-compose $(compose_args) build
-build-$(SERVICE): config
 	$(sudo) docker-compose $(compose_args) build $(SERVICE)
 pull:
-	$(sudo) docker-compose $(compose_args) pull
+	$(sudo) docker-compose $(compose_args) pull $(SERVICE)
 up: config
-	$(sudo) docker-compose $(compose_args) up -d
+	$(sudo) docker-compose $(compose_args) up -d $(SERVICE)
 restart:
-	$(sudo) docker-compose $(compose_args) restart
+	$(sudo) docker-compose $(compose_args) restart $(SERVICE)
 rm:
-	$(sudo) docker-compose $(compose_args) rm -f
+	$(sudo) docker-compose $(compose_args) rm -f $(SERVICE)
 stop:
-	$(sudo) docker-compose $(compose_args) stop
+	$(sudo) docker-compose $(compose_args) stop $(SERVICE)
 logs:
-	$(sudo) docker-compose $(compose_args) logs
+	$(sudo) docker-compose $(compose_args) logs $(SERVICE)
 
 test:
 	echo $(compose_args)
