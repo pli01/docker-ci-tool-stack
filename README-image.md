@@ -23,7 +23,24 @@
 | Docker registry Nexus | http://ip/ | http://localhost:19081/ | admin/admin123 |
 | service-config | no external access | | |
 
-# Stack changes
+# Stack configuration changes
+* stack configuration is split in two part
+  * at build time:
+    * source env shell variables before docker-compose build (or ADD/COPY Files in Dockerfiles services)
+    * in docker-compose.$ENV.yml with build/args use ENV shell
+  * at run time:
+    * in docker-compose.$ENV.yml and env_file: $ENV-config
+    * $ENV-config (passed to environment at run time)
+    * sample:
+```
+    nexus: choosing the prefix context, or java parameters
+    jenkins: choosing the prefix context, or java parameters
+    gitlab: configure listen url, ldap config
+```
+
+  * at start time/each time:
+    * with the service-config container, which use REST API of services (nexus,gitlab,jenkins) to apply postconfig
+    
 * service-config: a container executing postconfiguration (via API) for all services (nexus, gitlab, jenkins...)
   * Build: getting ansible roles via ansible-galay:  (ex: nexus3-oss), add config
   * Run: using ansible and call uri to configure each services
@@ -32,10 +49,10 @@
 # Custom configuration use ENV file
 
 
-create docker-compose.${ENV}.yml
-create ${ENV}-config.env
-```
+* create docker-compose.${ENV}.yml
+* create ${ENV}-config.env
 
+```
 make sudo= env=dev build  pull up
 make sudo= env=stage build SERVICE=service-config up
 ```
