@@ -14,16 +14,30 @@
 * Todo add docker-compose via systemd start script
 * Todo add prepare services working dir (data, logs, config for /opt/gitlab, nexus, ...) on docker host
 
+# Stack configuration changes
+## URL and endpoint
+* Add front container (nginx) to expose all services behind one IP/name URL (rewrite) over http/https
+  * Limitations, can't define multiple docker registry in nexus
+* Add services configuration at run time with a dedicated container.
+  * services like nexus, gitlab and nexus, can be configured:
+    * as build time (few configuration)
+    * configured at run time (some other configuration)
+      * nexus - add repo, ldap config, add user, tasks
+      * gitlab add repo, preferences, user,group,...
+      * jenkins (at run time with init.d.groovy or via Seed Jobs and groovy)
+
+
 | *Tool* | *Public URL* *Back Link* | *Credentials* |
 | ------------- | ------------- | ------------- |
-| start URL | http://ip | proxy | |
+| start URL | http://ip | nginx (front) reversproxy | |
 | GitLab | http://ip | http://localhost | root/5iveL!fe |
 | Jenkins | http://ip/jenkins | http://localhost:18080/ | no login required |
 | Nexus | http://ip/nexus/ | http://localhost:18081/ | admin/admin123 |
 | Docker registry Nexus | http://ip/ | http://localhost:19081/ | admin/admin123 |
 | service-config | no external access | | |
 
-# Stack configuration changes
+## Configuration
+
 * stack configuration is split in two part
   * at build time:
     * source env shell variables before docker-compose build (or ADD/COPY Files in Dockerfiles services)
