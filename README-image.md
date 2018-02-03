@@ -23,6 +23,12 @@
 | Docker registry Nexus | http://ip/ | http://localhost:19081/ | admin/admin123 |
 | service-config | no external access | | |
 
+# Stack changes
+* service-config: a container executing postconfiguration (via API) for all services (nexus, gitlab, jenkins...)
+  * Build: getting ansible roles via ansible-galay:  (ex: nexus3-oss), add config
+  * Run: using ansible and call uri to configure each services
+  * use ENV var to pass config at run time, or volume mount (must find something cool)
+
 # Custom configuration use ENV file
 
 
