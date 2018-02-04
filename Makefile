@@ -5,6 +5,8 @@ sudo ?= sudo -E
 compose_args += -f docker-compose.yml
 compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-compose.$(env).yml")
 
+compose_out ?= docker-compose.out.yml
+
 all: stop rm up
 clean:
 	$(sudo) docker system prune -f
@@ -24,7 +26,19 @@ stop:
 	$(sudo) docker-compose $(compose_args) stop $(SERVICE)
 logs:
 	$(sudo) docker-compose $(compose_args) logs $(SERVICE)
+# generate docker-compose.out.yml from all compose args (default + env)
+template:
+	$(sudo) docker-compose $(compose_args) config | tee $(compose_out)
+build-template: $(compose_out)
+	$(sudo) docker-compose -f $(compose_out) build $(SERVICE)
+up-template: $(compose_out)
+	$(sudo) docker-compose -f $(compose_out) up $(SERVICE)
+stop-template: $(compose_out)
+	$(sudo) docker-compose -f $(compose_out) stop $(SERVICE)
+rm-template: $(compose_out)
+	$(sudo) docker-compose -f $(compose_out) rm $(SERVICE)
+
+
 
 test:
 	echo $(compose_args)
-
