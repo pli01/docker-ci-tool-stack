@@ -6,3 +6,7 @@
 - src: https://github.com/pli01/ansible-nexus3-oss
   version: master
   name: nexus3-oss
+
+- src: https://github.com/pli01/ansible-gitlab-config
+  version: master
+  name: gitlab-config
