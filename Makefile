@@ -32,13 +32,12 @@ template:
 build-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) build $(SERVICE)
 up-template: $(compose_out)
-	$(sudo) docker-compose -f $(compose_out) up $(SERVICE)
+	$(sudo) docker-compose -f $(compose_out) up -d $(SERVICE)
+restart-template: $(compose_out)
+	$(sudo) docker-compose -f $(compose_out) restart $(SERVICE)
 stop-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) stop $(SERVICE)
 rm-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) rm $(SERVICE)
-
-
-
 test:
 	echo $(compose_args)
