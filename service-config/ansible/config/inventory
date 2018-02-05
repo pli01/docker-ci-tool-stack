@@ -1,2 +1,4 @@
 [nexus]
 localhost ansible_connection=local
+[gitlab]
+localhost ansible_connection=local
