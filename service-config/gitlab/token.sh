@@ -12,7 +12,7 @@ csrf_token=$(echo $body_header | perl -ne 'print "$1\n" if /new_user.*?authentic
 # send login credentials with curl, using cookies and token from previous request
 curl -sSf -b cookies.txt -c cookies.txt -i "${gitlab_host}/users/sign_in" \
 	    --data "user[login]=${gitlab_user}&user[password]=${gitlab_password}" \
-	        --data-urlencode "authenticity_token=${csrf_token}" 2>&1 >/dev/null
+	        --data-urlencode "authenticity_token=${csrf_token}" # 2>&1 >/dev/null
 
 # send curl GET request to personal access token page to get auth token
 body_header=$(curl -H 'user-agent: curl' -b cookies.txt -i "${gitlab_host}/profile/personal_access_tokens" -s)

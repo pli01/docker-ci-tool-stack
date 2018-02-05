@@ -2,3 +2,4 @@
 * API GET/PUT to configure gitlab (need private token) in personal access token
 * login with user/password , create private token, and use it
 https://stackoverflow.com/questions/47948887/login-to-gitlab-using-curl
+http://automation.ipspace.net/Example:Parsing_Text_Printouts_within_Ansible_Playbooks
