@@ -1,1 +1,2 @@
+ansible/config/group_vars/*
 ansible/roles/
