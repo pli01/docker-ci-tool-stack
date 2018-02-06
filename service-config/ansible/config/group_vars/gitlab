@@ -1,9 +1,8 @@
 ---
-gitlab_host: http://gitlab
-gitlab_user: root
-gitlab_password: mypassword
+#gitlab_host: http://gitlab
+#gitlab_user: root
+#gitlab_password: mypassword
 
-gitlab_application_settings:
-  signup_enabled: false
-  usage_ping_enabled: false
-  restricted_visibility_levels: []
+gitlab_application_settings: {}
+
+gitlab_local_users: []
