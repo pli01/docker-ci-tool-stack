@@ -12,3 +12,6 @@
 #- src: https://github.com/pli01/ansible-gitlab-config
 #  version: master
 #  name: gitlab-config
+#
+# from galaxy
+#- src: pli01.ansible-gitlab-config
