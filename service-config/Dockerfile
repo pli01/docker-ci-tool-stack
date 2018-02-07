@@ -1,9 +1,10 @@
 FROM debian:latest
 ENV DEBIAN_FRONTEND noninteractive
 ARG MIRROR_DEBIAN
+ARG APP_ENV=dev
 
 # Use nexus repo to speed up build if MIRROR_DEBIAN defined
-RUN echo "$http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
+RUN echo "$APP_ENV $http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
      sed -i.orig -e "s|http://deb.debian.org/debian|$MIRROR_DEBIAN/debian9|g ; s|http://security.debian.org|$MIRROR_DEBIAN/debian9-security|g" /etc/apt/sources.list
 
 RUN apt-get -q update && \
@@ -15,6 +16,7 @@ RUN apt-get -q update && \
 
 # config / playbook / roles
 ADD ansible /opt/ansible
+COPY ${APP_ENV}.config /opt/ansible/config/group_vars/all
 COPY run.sh /opt/run.sh
 COPY build.sh /opt/build.sh
 RUN chmod +x /opt/build.sh && bash /opt/build.sh && rm -rf /opt/build.sh
