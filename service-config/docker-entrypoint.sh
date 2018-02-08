@@ -1,6 +1,6 @@
 #!/bin/bash
 # Client Env Vars
-set -e
+#set -e
 
 if [ "$1" = 'service-config' ]; then
 
