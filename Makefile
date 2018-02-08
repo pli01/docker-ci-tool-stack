@@ -2,7 +2,8 @@ project ?= ci-tool-stack
 env ?= dev
 sudo ?= sudo -E
 
-compose_build_args = --force-rm --no-cache
+compose_build_args = --force-rm
+# compose_build_args += --no-cache
 compose_args += -f docker-compose.yml
 compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-compose.$(env).yml")
 
@@ -31,7 +32,7 @@ logs:
 template:
 	$(sudo) docker-compose $(compose_args) config | tee $(compose_out)
 build-template: $(compose_out)
-	$(sudo) docker-compose -f $(compose_out) build $(SERVICE)
+	$(sudo) docker-compose -f $(compose_out) build $(compose_build_args) $(SERVICE)
 up-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) up -d $(SERVICE)
 restart-template: $(compose_out)
