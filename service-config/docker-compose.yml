@@ -1,4 +1,4 @@
-version: "2"
+version: '3'
 
 services:
   service-config:
@@ -7,6 +7,10 @@ services:
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
+        - no_proxy=$no_proxy
     entrypoint: /docker-entrypoint.sh service-config
     environment:
+      - http_proxy=$http_proxy
+      - https_proxy=$https_proxy
+      - no_proxy=$no_proxy,nexus
       - nexus=http://localhost:8081/nexus

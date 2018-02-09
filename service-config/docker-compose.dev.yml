@@ -1,0 +1,13 @@
+version: '3'
+services:
+  service-config:
+    build:
+      context: .
+      args:
+        - http_proxy=$http_proxy
+        - https_proxy=$https_proxy
+        - no_proxy=$no_proxy,192.168.1.1
+        - MIRROR_DEBIAN=http://192.168.1.1/nexus/repository
+        - APP_ENV=dev
+    env_file:
+      - ./dev-config.env
