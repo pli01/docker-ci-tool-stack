@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 SERVICE_BUILD_DIR=$(docker-compose config --services)
 
@@ -12,6 +13,4 @@ tar zc  \
     | \
   (cd $BUILDROOT && tar zxvf -  )
 
-#rm -rf $BUILDROOT
 exit 0
-
