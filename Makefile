@@ -63,10 +63,12 @@ rm-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) rm -f $(SERVICE)
 
 
-.PHONY: package test publish
+.PHONY: package test publish clean-package
 package:
 	bash ./tools/package.sh
+clean-package:
+	rm -rf dist || true
 test:
-	bash ./tools/test.sh $(compose_args)
+	export compose_args=$(compose_args) ; bash ./tools/test.sh $(compose_args)
 publish:
 	bash ./tools/publish.sh $(compose_args)
