@@ -1,7 +1,12 @@
 FROM debian:latest
-ENV DEBIAN_FRONTEND noninteractive
+# Build
 ARG MIRROR_DEBIAN
 ARG APP_ENV=dev
+# Run
+ENV DEBIAN_FRONTEND noninteractive
+ENV SERVICE_CONFIG_NEXUS_ENABLE true
+ENV SERVICE_CONFIG_GITLAB_ENABLE true
+ENV SERVICE_CONFIG_JENKINS_ENABLE true
 
 # Use nexus repo to speed up build if MIRROR_DEBIAN defined
 RUN echo "$APP_ENV $http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
