@@ -3,6 +3,7 @@ set -e
 echo "Test docker-compose file"
 
 ret=0
+compose_args="${compose_args:-}"
 
 BUILDROOT=$(pwd)/dist
 [ -d $BUILDROOT ] || exit 1

@@ -69,6 +69,6 @@ package:
 clean-package:
 	rm -rf dist || true
 test:
-	export compose_args=$(compose_args) ; bash ./tools/test.sh $(compose_args)
+	bash ./tools/test.sh
 publish:
 	bash ./tools/publish.sh $(compose_args)
