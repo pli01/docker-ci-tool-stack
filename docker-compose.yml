@@ -38,7 +38,7 @@ services:
   front:
 #    image: nginx:latest
     build:
-      context: ./nginx
+      context: ./front
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
