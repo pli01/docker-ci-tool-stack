@@ -1,9 +1,16 @@
 FROM jenkins/jenkins:lts
+ARG MIRROR_DEBIAN
+ARG APP_ENV=dev
 
 USER root
-RUN apt-get update \
-      && apt-get install -y sudo curl\
-      && apt-get install -y libltdl7\
+# Use nexus repo to speed up build if MIRROR_DEBIAN defined
+RUN echo "$APP_ENV $http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
+     sed -i.orig -e "s|http://deb.debian.org/debian|$MIRROR_DEBIAN/debian9|g ; s|http://security.debian.org|$MIRROR_DEBIAN/debian9-security|g" /etc/apt/sources.list
+
+
+RUN apt-get -q update \
+      && apt-get install -qy --no-install-recommends sudo curl \
+      && apt-get install -qy libltdl7 \
       && rm -rf /var/lib/apt/lists/*
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 
@@ -51,6 +58,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder
 # drop back to the regular jenkins user - good practice
 USER jenkins
+
 # install pip requirements
 #COPY requirements.txt /usr/share/jenkins/requirements.txt
 #RUN pip install -r /usr/share/jenkins/requirements.txt
