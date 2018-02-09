@@ -2,7 +2,16 @@
 
 SERVICE_BUILD_DIR=$(docker-compose config --services)
 
-find \
+BUILDROOT=$(pwd)/dist
+[ -d $BUILDROOT ] && rm -rf $BUILDROOT
+mkdir -p $BUILDROOT
+
+tar zc  \
       docker-compose.yml \
       $SERVICE_BUILD_DIR \
-    -type f ! -regex ".*.git"
+    | \
+  (cd $BUILDROOT && tar zxvf -  )
+
+#rm -rf $BUILDROOT
+exit 0
+

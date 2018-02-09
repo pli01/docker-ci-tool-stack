@@ -1,4 +1,6 @@
+*.orig
 .env
+dist
 docker-compose.*.yml
 !docker-compose.dev.yml
 *-config.env
