@@ -8,6 +8,13 @@ $ docker run -d -p=8080:8080 jenkins
 
 Once Jenkins is up and running go to http://192.168.59.103:8080
 
+# Configure Jenkins at runtime
+Jenkins configuration is possible with runtime params. See init.groovy for samples
+
+```
+$ docker run -d -p=8080:8080 -e JENKINS_INSTANCE_SETNUMEXECUTORS=2 jenkins
+```
+
 ## Update Plugins
 
 Install and update all plugins via the Jenkins Plugin Manager.
