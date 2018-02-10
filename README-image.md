@@ -95,3 +95,6 @@ make sudo= env=stage build SERVICE=service-config up
   * https://github.com/sonatype-nexus-community/docker-nginx-nexus-repository/blob/master/nexus.sh
   * https://github.com/savoirfairelinux/ansible-nexus3-oss/tree/master/files/groovy
   * https://github.com/pli01/ansible-nexus3-oss/tree/master/files/groovy
+
+# Start with dedicated custom compose
+* make env=jenkins compose_out=docker-compose.jenkins.out.yml build-template stop-template run-template
