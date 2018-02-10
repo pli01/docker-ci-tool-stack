@@ -1,9 +1,10 @@
 project ?= ci-tool-stack
 env ?= dev
-sudo ?= sudo -E
+#sudo ?= sudo -E
+sudo ?=
 
 compose_build_args = --force-rm
-# compose_build_args += --no-cache
+#compose_build_args += --no-cache
 compose_args += -f docker-compose.yml
 compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-compose.$(env).yml")
 
@@ -61,6 +62,8 @@ stop-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) stop $(SERVICE)
 rm-template: $(compose_out)
 	$(sudo) docker-compose -f $(compose_out) rm -f $(SERVICE)
+logs-template: $(compose_out)
+	$(sudo) docker-compose -f $(compose_out) logs --tail=100 $(SERVICE)
 
 
 .PHONY: package test publish clean-package
