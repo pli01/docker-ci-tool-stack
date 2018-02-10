@@ -1,15 +1,26 @@
 FROM jenkins/jenkins:lts
+# Docker versions Env Variables
+ENV DOCKER_ENGINE_VERSION=latest
+ENV DOCKER_COMPOSE_VERSION=1.19.0
+
+# Env Variables
 ARG MIRROR_DEBIAN
 ARG APP_ENV=dev
+
+# Package custom
+ARG PACKAGE_CUSTOM="ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder"
+ENV PACKAGE_CUSTOM=$PACKAGE_CUSTOM
 
 USER root
 # Use nexus repo to speed up build if MIRROR_DEBIAN defined
 RUN echo "$APP_ENV $http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
      sed -i.orig -e "s|http://deb.debian.org/debian|$MIRROR_DEBIAN/debian9|g ; s|http://security.debian.org|$MIRROR_DEBIAN/debian9-security|g" /etc/apt/sources.list
 
-
+# Customize jenkins at startup
+# install package requirements
 RUN apt-get -q update \
       && apt-get install -qy --no-install-recommends sudo curl \
+        $PACKAGE_CUSTOM \
       && apt-get install -qy libltdl7 \
       && rm -rf /var/lib/apt/lists/*
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
@@ -53,12 +64,6 @@ COPY config/ssh-keys/cd-demo.pub /usr/share/jenkins/ref/.ssh/id_rsa.pub
 # see: https://github.com/jenkinsci/docker#preinstalling-plugins
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
-# Customize jenkins at startup
-USER root
-# install package requirements
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder
-# drop back to the regular jenkins user - good practice
 USER jenkins
 
 # install pip requirements
