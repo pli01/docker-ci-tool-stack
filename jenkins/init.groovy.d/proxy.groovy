@@ -5,7 +5,9 @@ def env = System.getenv()
 
 // need git plugins
 def httpProxyHost = env['HTTP_PROXY_HOST'] ?: ""
-def httpProxyPort = Integer.parseInt( env['HTTP_PROXY_PORT'] ?: "" )
+//def httpProxyPort = Integer.parseInt( env['HTTP_PROXY_PORT'] ) ?: 0
+def httpProxyPort = env['HTTP_PROXY_PORT'] ?: "8888"
+//int httpProxyPort = env['HTTP_PROXY_PORT'].toInteger() ?: 8888
 def httpProxyUser = env['HTTP_PROXY_USER'] ?: ""
 def httpProxyPassword = env['HTTP_PROXY_PASSWORD'] ?: ""
 def httpProxyExceptions = env['HTTP_PROXY_EXCEPTIONS'] ?: ""
@@ -17,12 +19,12 @@ Thread.start {
     // proxy config
     println "--> Configuring Proxy config"
     final String name = httpProxyHost
-    final int port = httpProxyPort
+    final int port = httpProxyPort.toInteger()
     final String userName = httpProxyUser
     final String password = httpProxyPassword
     final String noProxyHost = httpProxyExceptions
 
-    final def pc = new hudson.ProxyConfiguration(name, port, userName, password)
+    final def pc = new hudson.ProxyConfiguration(name, port, userName, password, noProxyHost)
     instance.proxy = pc
     // Save the state
     instance.save()
