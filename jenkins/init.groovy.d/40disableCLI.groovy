@@ -47,6 +47,12 @@ p.each { x ->
         p.remove(x)
         configChanged = true
     }
+    if(x.name && x.name.contains("JNLP")) {
+        //println "remove ${x}"
+        p.remove(x)
+        configChanged = true
+    }
+
 }
 
 // disable CLI access over /cli URL
