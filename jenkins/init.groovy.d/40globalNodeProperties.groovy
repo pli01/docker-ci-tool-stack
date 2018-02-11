@@ -33,5 +33,5 @@ envVars["TARGET_PLATEFORME_NAME"] = targetPlateformeName
 envVars["TARGET_PLATEFORME_EMAIL"] = targetPlateformeEmail
 
 Jenkins.instance.save()
-logger.info("env var updated")
+logger.info("--> Global env var updated")
 

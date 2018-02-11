@@ -7,6 +7,7 @@ import hudson.model.*
 def env = System.getenv()
 //def jenkins_instance_setNumExecutors = Integer.parseInt( env['JENKINS_INSTANCE_SETNUMEXECUTORS'] ?: "5" )
 
+    println "--> Configuring NumExecutors"
 int jenkins_instance_setNumExecutors = env['JENKINS_INSTANCE_SETNUMEXECUTORS'].toInteger() ?: 5
 
 Jenkins.instance.setNumExecutors( jenkins_instance_setNumExecutors )

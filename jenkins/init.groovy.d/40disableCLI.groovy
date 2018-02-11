@@ -64,7 +64,7 @@ removal(j.getExtensionList(RootAction.class))
 removal(j.actions)
 
 if(configChanged) {
-    println 'Jenkins CLI has been disabled.'
+    println '--> Jenkins CLI has been disabled.'
 } else {
-    println 'Nothing changed. Jenkins CLI already disabled.'
+    println '--> Nothing changed. Jenkins CLI already disabled.'
 }

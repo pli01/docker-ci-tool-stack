@@ -13,6 +13,8 @@ services:
       args:
         - no_proxy=$no_proxy,192.168.1.1
         - MIRROR_DEBIAN=http://192.168.1.1/nexus/repository
+    env_file:
+      - ./dev-config.env
   gitlab:
     env_file:
       - ./dev-config.env
