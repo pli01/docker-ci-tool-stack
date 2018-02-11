@@ -82,3 +82,9 @@ ENV LDAP_DISABLE_MAIL_ADDRESS_RESOLVER=""
 
 RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
 COPY init.groovy.d/ /usr/share/jenkins/ref/init.groovy.d/
+
+# Enable pam authent: jenkins user need to read shadow
+USER root
+RUN adduser jenkins shadow
+
+USER jenkins
