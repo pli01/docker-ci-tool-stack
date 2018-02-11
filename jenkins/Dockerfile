@@ -11,15 +11,6 @@ ARG APP_ENV=dev
 ARG PACKAGE_CUSTOM="ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder"
 ENV PACKAGE_CUSTOM=$PACKAGE_CUSTOM
 
-# Jenkins Default Config
-# JENKINS_SECURITY_REALM= none jenkins ldap pam
-ENV JENKINS_SECURITY_REALM=""
-# JENKINS_AUTHORIZATION_STRATEGY=full role
-ENV JENKINS_AUTHORIZATION_STRATEGY=full
-# Jenkins LDAP
-ENV LDAP_INHIBIT_INFER_ROOTDN=""
-ENV LDAP_DISABLE_MAIL_ADDRESS_RESOLVER=""
-
 USER root
 # Use nexus repo to speed up build if MIRROR_DEBIAN defined
 RUN echo "$APP_ENV $http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
@@ -74,6 +65,16 @@ COPY config/ssh-keys/cd-demo.pub /usr/share/jenkins/ref/.ssh/id_rsa.pub
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
 USER jenkins
+# Jenkins Default Config
+# JENKINS_SECURITY_REALM= none jenkins ldap pam
+ENV JENKINS_SECURITY_REALM=""
+# JENKINS_AUTHORIZATION_STRATEGY=full role
+ENV JENKINS_AUTHORIZATION_STRATEGY=full
+ENV JENKINS_AUTHZ_JSON_URL=""
+ENV JENKINS_GROUP_NAME_ADMIN=""
+# LDAP
+ENV LDAP_INHIBIT_INFER_ROOTDN=""
+ENV LDAP_DISABLE_MAIL_ADDRESS_RESOLVER=""
 
 # install pip requirements
 #COPY requirements.txt /usr/share/jenkins/requirements.txt
