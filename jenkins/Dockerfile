@@ -11,6 +11,15 @@ ARG APP_ENV=dev
 ARG PACKAGE_CUSTOM="ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder"
 ENV PACKAGE_CUSTOM=$PACKAGE_CUSTOM
 
+# Jenkins Default Config
+# JENKINS_SECURITY_REALM= none jenkins ldap pam
+ENV JENKINS_SECURITY_REALM=""
+# JENKINS_AUTHORIZATION_STRATEGY=full role
+ENV JENKINS_AUTHORIZATION_STRATEGY=full
+# Jenkins LDAP
+ENV LDAP_INHIBIT_INFER_ROOTDN=""
+ENV LDAP_DISABLE_MAIL_ADDRESS_RESOLVER=""
+
 USER root
 # Use nexus repo to speed up build if MIRROR_DEBIAN defined
 RUN echo "$APP_ENV $http_proxy $no_proxy" && set -x && [ -z "$MIRROR_DEBIAN" ] || \
@@ -38,7 +47,7 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-co
 USER jenkins
 
 # installing specific list of plugins. see: https://github.com/jenkinsci/docker#preinstalling-plugins
-COPY plugins.txt /usr/share/jenkins/plugins.txt
+COPY plugins.txt.latest /usr/share/jenkins/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
 
 # Adding default Jenkins Seed Job

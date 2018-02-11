@@ -14,6 +14,21 @@ Jenkins configuration is possible with runtime params. See init.groovy for sampl
 ```
 $ docker run -d -p=8080:8080 -e JENKINS_INSTANCE_SETNUMEXECUTORS=2 jenkins
 ```
+```
+      JENKINS_INSTANCE_SETNUMEXECUTORS: 3
+      JENKINS_SECURITY_REALM: 'jenkins' # ldap pam
+      JENKINS_AUTHORIZATION_STRATEGY: role  # full
+      JENKINS_ADMIN_USERNAME: admin
+      JENKINS_ADMIN_PASSWORD: password
+      http_proxy: http://127.0.0.1:8888
+      https_proxy: http://127.0.0.1:8889
+      HTTP_PROXY_HOST:
+      HTTP_PROXY_PORT: 80
+      HTTP_PROXY_EXCEPTIONS: "localhost"
+      GIT_GLOBAL_CONFIG_NAME: GitDemoCI
+      GIT_GLOBAL_CONFIG_EMAIL: GitDemoCI@test.com
+
+```
 
 ## Update Plugins
 
