@@ -21,6 +21,7 @@ Runtime configuration can be provided using environment variables:
 * JENKINS_SECURITY_REALM, choose on of them: 'jenkins' for local user database, 'ldap' for LDAP auth or 'pam' for PAM authentication. Default to true (enabled).
 * JENKINS_AUTHORIZATION_STRATEGY: choose one of: 'role' for role based strategy or 'full' for allow full access for authenticated users
 * JENKINS_AUTHZ_JSON_URL: provide role mapping  in a json variable. Format is : '{ "admins": [ "admin", "userA" ], "builders": [ "groupB", "userB_zeta" ], "readers": ["authenticated"] }'
+* JENKINS_CREDENTIAL_JSON_LIST: provide user credential in json style. Format is : '[ { "id": "user1-id", "description": "user1", "user": "user1", "password": "xyz" } ]'
 * JENKINS_ADMIN_USERNAME: admin . Choose admin login
 * JENKINS_ADMIN_PASSWORD: admin123. Chosse admin password
 * HTTP_PROXY_HOST: Define proxy hostname
@@ -52,6 +53,7 @@ Runtime configuration can be provided using environment variables:
       JENKINS_SECURITY_REALM: jenkins # ldap pam
       JENKINS_AUTHORIZATION_STRATEGY: role  # full
       JENKINS_AUTHZ_JSON_URL: '{ "admins": [ "admin", "userA" ], "builders": [ "groupB", "userB_zeta" ], "readers": ["authenticated"] }'
+      JENKINS_CREDENTIAL_JSON_LIST: '[ { "id": "jenkins-build-id", "description": "jenkins-build", "user": "jenkins-build", "password": "password01" }, { "id": "jenkins-deploy-id", "description": "jenkins-deploy", "user": "jenkins-deploy", "password": "password02" } ]'
       JENKINS_ADMIN_USERNAME: admin
       JENKINS_ADMIN_PASSWORD: password
       http_proxy: http://127.0.0.1:8888
