@@ -53,7 +53,7 @@
   </triggers>
   <builders>
     <hudson.tasks.Shell>
-      <command>( cd jobs-deployer &amp;&amp; make JJB_JOBS=jobs-deployer JJB_USER=admin )</command>
+      <command>( cd jobs-deployer &amp;&amp; make JJB_JOBS=job-seed JJB_USER=admin )</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
