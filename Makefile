@@ -5,10 +5,10 @@ sudo ?=
 
 compose_build_args = --force-rm
 #compose_build_args += --no-cache
-compose_args += -f docker-compose -p $(project).yml
-compose_args += $(shell [ -f  docker-compose -p $(project).$(env).yml ] && echo "-f docker-compose -p $(project).$(env).yml")
+compose_args += -f docker-compose.yml
+compose_args += $(shell [ -f  docker-compose.$(env).yml ] && echo "-f docker-compose.$(env).yml")
 
-compose_out ?= docker-compose -p $(project).out.yml
+compose_out ?= docker-compose.out.yml
 
 default: help
 	
