@@ -38,6 +38,9 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-co
 USER jenkins
 
 # installing specific list of plugins. see: https://github.com/jenkinsci/docker#preinstalling-plugins
+ARG JENKINS_UC_URL
+ENV JENKINS_UC=$JENKINS_UC_URL
+
 COPY plugins.txt.latest /usr/share/jenkins/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
 
