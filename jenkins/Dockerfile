@@ -10,7 +10,13 @@ ARG PYPI_HOST
 ARG APP_ENV=dev
 
 # Package custom
-ARG PACKAGE_CUSTOM="ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder"
+ARG PACKAGE_CUSTOM="ruby make ansible git unzip python-pip python-dev python-openstackclient python-heatclient jenkins-job-builder  python-wheel \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common \
+     debootstrap rinse"
 ENV PACKAGE_CUSTOM=$PACKAGE_CUSTOM
 
 USER root
@@ -28,7 +34,8 @@ RUN apt-get -q update \
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 
 # Enable pam authent: jenkins user need to read shadow
-RUN adduser jenkins shadow
+# Allow jenkins to launch docker command
+RUN adduser jenkins shadow ; adduser jenkins docker
 
 # install pip requirements
 #  optionnel, use nexus repo to speed up
@@ -43,8 +50,16 @@ RUN [ -z "$PYPI_URL" ] || pip_args=" --index-url $PYPI_URL " ; \
 # see: https://issues.jenkins-ci.org/browse/JENKINS-35025
 # see: https://get.docker.com/builds/
 # see: https://wiki.jenkins-ci.org/display/JENKINS/CloudBees+Docker+Custom+Build+Environment+Plugin#CloudBeesDockerCustomBuildEnvironmentPlugin-DockerinDocker
-RUN curl -sSL -o /bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
-    chmod +x /bin/docker
+#RUN curl -sSL -o /bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
+#    chmod +x /bin/docker
+RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add - ; \
+    add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+   $(lsb_release -cs) \
+   stable" ; \
+   apt-get update -q ; \
+   apt-get install -qy docker-ce 
+    
 RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
