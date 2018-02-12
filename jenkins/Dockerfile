@@ -5,6 +5,8 @@ ENV DOCKER_COMPOSE_VERSION=1.19.0
 
 # Env Variables
 ARG MIRROR_DEBIAN
+ARG PYPI_URL
+ARG PYPI_HOST
 ARG APP_ENV=dev
 
 # Package custom
@@ -24,6 +26,17 @@ RUN apt-get -q update \
       && apt-get install -qy libltdl7 \
       && rm -rf /var/lib/apt/lists/*
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+
+# Enable pam authent: jenkins user need to read shadow
+RUN adduser jenkins shadow
+
+# install pip requirements
+#  optionnel, use nexus repo to speed up
+COPY requirements.txt /usr/share/jenkins/requirements.txt
+RUN [ -z "$PYPI_URL" ] || pip_args=" --index-url $PYPI_URL " ; \
+     [ -z "$PYPI_HOST" ] || pip_args="$pip_args --trusted-host $PYPI_HOST " ; \
+     [ -z "$http_proxy" ] || pip_args="$pip_args --proxy $http_proxy " ; \
+    pip install $pip_args -I -r /usr/share/jenkins/requirements.txt
 
 # getting the docker-cli
 # --- Attention: docker.sock needs to be mounted as volume in docker-compose.yml
@@ -79,15 +92,7 @@ ENV JENKINS_GROUP_NAME_ADMIN=""
 ENV LDAP_INHIBIT_INFER_ROOTDN=""
 ENV LDAP_DISABLE_MAIL_ADDRESS_RESOLVER=""
 
-# install pip requirements
-#COPY requirements.txt /usr/share/jenkins/requirements.txt
-#RUN pip install -r /usr/share/jenkins/requirements.txt
-
 RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
 COPY init.groovy.d/ /usr/share/jenkins/ref/init.groovy.d/
-
-# Enable pam authent: jenkins user need to read shadow
-USER root
-RUN adduser jenkins shadow
 
 USER jenkins
