@@ -53,16 +53,20 @@ RUN [ -z "$PYPI_URL" ] || pip_args=" --index-url $PYPI_URL " ; \
 #RUN curl -sSL -o /bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest && \
 #    chmod +x /bin/docker
 
-RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add - ; \
+ARG MIRROR_DOCKER
+ENV MIRROR_DOCKER=${MIRROR_DOCKER:-https://download.docker.com/linux}
+RUN curl -fsSL $MIRROR_DOCKER/$(. /etc/os-release; echo "$ID")/gpg | apt-key add - ; \
     add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-   $(lsb_release -cs) \
-   stable" ; \
-   apt-get update -q ; \
-   apt-get install -qy docker-ce  ; \
-   adduser jenkins docker
-#    
-RUN curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
+     "deb [arch=amd64] $MIRROR_DOCKER/$(. /etc/os-release; echo "$ID") \
+     $(lsb_release -cs) \
+     stable" ; \
+    apt-get update -q ; \
+    apt-get install -qy docker-ce  ; \
+    adduser jenkins docker
+#     docker-compose install
+ARG MIRROR_DOCKER_COMPOSE
+ENV MIRROR_DOCKER_COMPOSE=${MIRROR_DOCKER_COMPOSE:-https://github.com/docker/compose/releases}
+RUN curl -L $MIRROR_DOCKER_COMPOSE/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
 USER jenkins

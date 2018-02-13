@@ -3,16 +3,21 @@ services:
   service-config:
     build:
       args:
-        - no_proxy=$no_proxy,192.168.1.1
-        - MIRROR_DEBIAN=http://192.168.1.1/nexus/repository
+        - no_proxy=$no_proxy,nexus,192.168.1.1
+        - MIRROR_DEBIAN=http://nexus/nexus/repository
         - APP_ENV=dev
     env_file:
       - ./dev-config.env
   jenkins:
     build:
       args:
-        - no_proxy=$no_proxy,192.168.1.1
-        - MIRROR_DEBIAN=http://192.168.1.1/nexus/repository
+        - no_proxy=$no_proxy,nexus,192.168.1.1
+        - MIRROR_DEBIAN=http://nexus/nexus/repository
+        - MIRROR_DOCKER=http://nexus/nexus/repository/docker-project/linux
+        - MIRROR_DOCKER_COMPOSE=http://nexus/nexus/repository/docker-compose
+        - JENKINS_UC_URL=http://nexus/nexus/repository/jenkins-updates
+#        - PYPI_URL=http://nexus/nexus/repository/pypi/simple
+#        - PYPI_HOST=nexus
     env_file:
       - ./dev-config.env
   gitlab:
