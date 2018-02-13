@@ -64,6 +64,11 @@ Runtime configuration can be provided using environment variables:
       GIT_GLOBAL_CONFIG_NAME: GitDemoCI
       GIT_GLOBAL_CONFIG_EMAIL: GitDemoCI@test.com
 
+      JENKINS_EMAIL_SUFFIX: noreply@nowhere
+      JENKINS_PUBLIC_URL: http://192.168.1.1
+      JENKINS_SMTP_HOST: smtp
+      JENKINS_SMTP_SSL: true
+
       LDAP_SERVER="ldap:389"
       LDAP_ROOTDN="${LDAP_FULL_DOMAIN}"
       LDAP_USER_SEARCH_BASE="ou=people"
