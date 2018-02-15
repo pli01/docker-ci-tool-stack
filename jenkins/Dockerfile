@@ -64,6 +64,7 @@ RUN curl -fsSL $MIRROR_DOCKER/$(. /etc/os-release; echo "$ID")/gpg | apt-key add
     apt-get install -qy docker-ce  ; \
     adduser jenkins docker
 #     docker-compose install
+## TODO: use pip install docker-compose
 ARG MIRROR_DOCKER_COMPOSE
 ENV MIRROR_DOCKER_COMPOSE=${MIRROR_DOCKER_COMPOSE:-https://github.com/docker/compose/releases}
 RUN curl -L $MIRROR_DOCKER_COMPOSE/download/1.19.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
