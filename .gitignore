@@ -5,3 +5,5 @@ docker-compose.*.yml
 !docker-compose.dev.yml
 *-config.env
 !dev-config.env
+service-config/*.config
+!service-config/dev.config
