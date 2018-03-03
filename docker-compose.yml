@@ -11,7 +11,8 @@ volumes:
 services:
   service-config:
     build:
-      context: ./service-config
+      #context: ./service-config
+      context: https://github.com/pli01/docker-service-config.git
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
@@ -38,7 +39,8 @@ services:
   front:
 #    image: nginx:latest
     build:
-      context: ./front
+#      context: ./front
+      context: https://github.com/pli01/docker-nginx.git
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
@@ -58,7 +60,9 @@ services:
     networks:
       - prodnetwork
   nexus:
-    image: sonatype/nexus3
+#  image: sonatype/nexus3
+    build:
+      context: https://github.com/pli01/docker-sonatype-nexus3.git
 #    build:
 #      context: ./docker-nexus3
 #      args:
@@ -77,7 +81,8 @@ services:
 #      - INSTALL4J_ADD_VM_PARAMS="-Xms2g -Xmx2g -XX:MaxDirectMemorySize=3g -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
   jenkins:
     build:
-      context: ./jenkins
+#      context: ./jenkins
+      context: https://github.com/pli01/docker-jenkins.git
       args:
         - http_proxy=$http_proxy
         - https_proxy=$https_proxy
@@ -128,7 +133,9 @@ services:
 # DISABLED: GitLab takes too much memory and CPU. Demo uses GitHub repositories instead.
 #
   gitlab:
-    image: gitlab/gitlab-ce:latest
+#    image: gitlab/gitlab-ce:latest
+    build:
+      context: https://github.com/pli01/docker-gitlab-ce.git
     restart: always
     networks:
       - prodnetwork
