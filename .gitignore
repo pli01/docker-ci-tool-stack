@@ -1,3 +1,4 @@
+backups
 *.orig
 .env
 dist

@@ -47,10 +47,28 @@ stop:
 logs:
 	$(sudo) docker-compose -p $(project) $(compose_args) logs $(SERVICE)
 
+backup_dir = /opt/gitlab/data/backups
+backup: backup-gitlab copy-backup-file swift-upload clean-backup
+
 backup-gitlab:
 	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-rake gitlab:backup:create'
 	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'umask 0077; tar -cf /var/opt/gitlab/backups/$$(date "+etc-gitlab-%s.tar") -C / etc/gitlab'
 	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'ls -l /var/opt/gitlab/backups/'
+
+copy-backup-file:
+	mkdir backups
+	etcfile=$$(sudo ls -1r $(backup_dir)/ |grep etc-gitlab |head -1) ; \
+           gitlabfile=$$(sudo ls -1r $(backup_dir)/ |grep gitlab_backup |head -1) ; \
+         sudo cp $(backup_dir)/$$etcfile backups ; \
+         sudo cp $(backup_dir)/$$gitlabfile backups ; \
+         ( cd backups && sudo chown $$USER. *.tar )
+swift-upload:
+	swift list backup -l --lh -p $$(date "+%Y-%m-%d")
+	( cd backups && swift upload backup/$$(date "+%Y-%m-%d") *.tar )
+	swift list backup -l --lh -p $$(date "+%Y-%m-%d")
+
+clean-backup:
+	rm -rf backups
 
 restore-gitlab:
 	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-ctl stop unicorn ; gitlab-ctl stop sidekiq'
