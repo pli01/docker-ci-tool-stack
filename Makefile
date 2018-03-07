@@ -70,6 +70,23 @@ swift-upload:
 clean-backup:
 	rm -rf backups
 
+restore: swift-download copy-restore-file
+
+RESTORE_DATE ?= # $(shell date "+%Y-%m-%d")
+swift-download:
+	mkdir -p restore
+	if [ -z "$(RESTORE_DATE)" ] ;then  exit 1; fi
+	swift list backup -l --lh -p $(RESTORE_DATE)
+	( cd restore && swift download backup -p $(RESTORE_DATE) )
+	( cd restore && find $(RESTORE_DATE) -type f )
+
+copy-restore-file:
+	etcfile=$$(ls -1r restore/$(RESTORE_DATE) |grep etc-gitlab |head -1) ; \
+           gitlabfile=$$(ls -1r restore/$(RESTORE_DATE) |grep gitlab_backup |head -1) ; \
+         sudo cp restore/$(RESTORE_DATE)/$$etcfile $(backup_dir)/$$etcfile; \
+         sudo cp restore/$(RESTORE_DATE)/$$gitlabfile $(backup_dir)/$$gitlabfile ; \
+         ( sudo chown 998.998 $(backup_dir)/$$gitlabfile $(backup_dir)/$$etcfile )
+
 restore-gitlab:
 	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-ctl stop unicorn ; gitlab-ctl stop sidekiq'
 	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c '(cd /var/opt/gitlab/backups/ ; backup=$$(ls -r1 *_gitlab_backup.tar | head -1) ; gitlab-rake gitlab:backup:restore force=yes BACKUP=$$(basename $$backup _gitlab_backup.tar) )'

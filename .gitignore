@@ -1,4 +1,5 @@
 backups
+restore
 *.orig
 .env
 dist
