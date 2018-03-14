@@ -3,6 +3,8 @@ version: '3'
 networks:
   prodnetwork:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
 
 volumes:
   nexus-data:
@@ -133,9 +135,9 @@ services:
 # DISABLED: GitLab takes too much memory and CPU. Demo uses GitHub repositories instead.
 #
   gitlab:
-#    image: gitlab/gitlab-ce:latest
-    build:
-      context: https://github.com/pli01/docker-gitlab-ce.git
+    image: gitlab/gitlab-ce:latest
+#    build:
+#      context: https://github.com/pli01/docker-gitlab-ce.git
     restart: always
     networks:
       - prodnetwork
