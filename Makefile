@@ -69,7 +69,7 @@ swift-upload:
 	swift list backup -l --lh -p $$(date "+%Y-%m-%d")
 
 clean-backup:
-	[ -d backups ] && rm -rf backups
+	if [ -d backups ] ;then  rm -rf backups ; fi
 
 restore: swift-download copy-restore-file
 

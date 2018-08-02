@@ -12,4 +12,5 @@ id
 pwd
 sudo find /opt/gitlab/data/backups/ -regex ".*.tar" -exec rm {} \; || true
 make env=forge-mi backup | tee /tmp/backup.out
-[ -d backups ] && rm -rf backups
+if [ -d backups ] ; then rm -rf backups ; fi
+exit 0
