@@ -10,6 +10,6 @@ source $rootdir/creds.sh
 cd $workdir || exit 1
 id
 pwd
-sudo rm /opt/gitlab/data/backups/*.tar || true
+sudo find /opt/gitlab/data/backups/ -regex ".*.tar" -exec rm {} \; || true
 make env=forge-mi backup | tee /tmp/backup.out
 [ -d backups ] && rm -rf backups
