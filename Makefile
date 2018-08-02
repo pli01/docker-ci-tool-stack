@@ -51,9 +51,10 @@ backup_dir = /opt/gitlab/data/backups
 backup: backup-gitlab copy-backup-file swift-upload clean-backup
 
 backup-gitlab:
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-rake gitlab:backup:create'
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'umask 0077; tar -cf /var/opt/gitlab/backups/$$(date "+etc-gitlab-%s.tar") -C / etc/gitlab'
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'ls -l /var/opt/gitlab/backups/'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'gitlab-ctl status'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'gitlab-rake gitlab:backup:create'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'umask 0077; tar -cf /var/opt/gitlab/backups/$$(date "+etc-gitlab-%s.tar") -C / etc/gitlab'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'ls -l /var/opt/gitlab/backups/'
 
 copy-backup-file:
 	mkdir backups
@@ -88,11 +89,11 @@ copy-restore-file:
          ( sudo chown 998.998 $(backup_dir)/$$gitlabfile $(backup_dir)/$$etcfile )
 
 restore-gitlab:
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-ctl stop unicorn ; gitlab-ctl stop sidekiq'
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c '(cd /var/opt/gitlab/backups/ ; backup=$$(ls -r1 *_gitlab_backup.tar | head -1) ; gitlab-rake gitlab:backup:restore force=yes BACKUP=$$(basename $$backup _gitlab_backup.tar) )'
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c '(cd /var/opt/gitlab/backups/ ; etc=$$(ls -r1 /var/opt/gitlab/backups/etc-gitlab-*.tar | head -1) ; tar -xvf $$etc -C / )'
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-ctl restart'
-	$(sudo) docker-compose -p $(project) $(compose_args) exec gitlab /bin/bash -c 'gitlab-rake gitlab:check SANITIZE=true'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'gitlab-ctl stop unicorn ; gitlab-ctl stop sidekiq'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c '(cd /var/opt/gitlab/backups/ ; backup=$$(ls -r1 *_gitlab_backup.tar | head -1) ; gitlab-rake gitlab:backup:restore force=yes BACKUP=$$(basename $$backup _gitlab_backup.tar) )'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c '(cd /var/opt/gitlab/backups/ ; etc=$$(ls -r1 /var/opt/gitlab/backups/etc-gitlab-*.tar | head -1) ; tar -xvf $$etc -C / )'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'gitlab-ctl restart'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'gitlab-rake gitlab:check SANITIZE=true'
 
 .PHONY: template build-template pull-template up-template restart-template stop-template rm-template
 # template: generate docker-compose -p $(project).out.yml from all docker-compose -p $(project) args (docker-compose -p $(project).yml + docker-composoe.$env.yml)
