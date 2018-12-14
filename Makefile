@@ -37,7 +37,7 @@ pre-up:
 	$(sudo) chown 1000 /opt/jenkins
 # Run
 up: config
-	$(sudo) docker-compose -p $(project) $(compose_args) up -d $(SERVICE)
+	$(sudo) docker-compose -p $(project) $(compose_args) up --no-build -d $(SERVICE)
 restart:
 	$(sudo) docker-compose -p $(project) $(compose_args) restart $(SERVICE)
 rm:
