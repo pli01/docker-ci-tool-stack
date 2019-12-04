@@ -32,7 +32,7 @@ build: config
 pull:
 	$(sudo) docker-compose -p $(project) $(compose_args) pull $(SERVICE)
 pre-up:
-	mkdir -p /opt/gitlab /opt/nexus-data /opt/jenkins
+	$(sudo) mkdir -p /opt/gitlab /opt/nexus-data /opt/jenkins
 	$(sudo) chown 200 /opt/nexus-data
 	$(sudo) chown 1000 /opt/jenkins
 # Run
