@@ -50,6 +50,8 @@ logs:
 
 gitlab_backup_dir = /opt/gitlab/data/backups
 jenkins_backup_dir = /opt/jenkins/backups
+nexus_backup_dir = /opt/nexus-data/backup
+nexus_restore_dir = /opt/nexus-data/restore
 
 backup: backup-gitlab backup-jenkins copy-backup-file-gitlab copy-backup-file-jenkins swift-upload clean-backup
 
@@ -61,6 +63,12 @@ backup-gitlab:
 
 backup-jenkins:
 	$(sudo) docker-compose -p $(project) $(compose_args) exec -T jenkins /bin/bash -c '( cd $$HOME ; umask 0077; mkdir -p backups ; tar -zcvf backups/jenkins-credentials.tar.gz secret* credentials.xml)'
+
+backup-nexus:
+	nexus_id=$$(docker-compose -p $(project) $(compose_args) ps -q nexus ) ;\
+		 docker cp export_nexus_database.sh $$nexus_id:/nexus-data/
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T nexus /bin/bash -c '(cd $$HOME && /nexus-data/export_nexus_database.sh)'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T nexus /bin/bash -c '(  cd /nexus-data/backup && tar -zcvf /nexus-data/backup/nexus-backup.tar.gz *.json.gz)'
 
 mkdir-backups:
 	mkdir -p backups
@@ -74,6 +82,12 @@ copy-backup-file-jenkins: mkdir-backups
 	jenkins_credentials=$$(sudo ls -1r $(jenkins_backup_dir)/ |grep jenkins-credentials |head -1) ; \
          sudo cp $(jenkins_backup_dir)/$$jenkins_credentials backups ; \
          ( cd backups && sudo chown $$USER. $$jenkins_credentials )
+
+copy-backup-file-nexus: mkdir-backups
+	nexus_backup=$$(sudo ls -1r $(nexus_backup_dir)/ |grep nexus-backup |head -1) ; \
+         sudo cp $(nexus_backup_dir)/$$nexus_backup backups ; \
+         ( cd backups && sudo chown $$USER. $$nexus_backup )
+
 
 swift-upload:
 	swift list backup -l --lh -p $$(date "+%Y-%m-%d")
@@ -114,7 +128,7 @@ restore-gitlab:
 
 
 copy-restore-file-jenkins: mkdir-restore
-	[ -d "$(jenkins_backup_dir)" ] || mkdir $(jenkins_backup_dir)
+	[ -d "$(jenkins_backup_dir)" ] || mkdir -p $(jenkins_backup_dir)
 	sudo chown 1000 $(jenkins_backup_dir)
 	if [ -d "restore/$(RESTORE_DATE)" ] ;then \
           jenkins_credentials=$$(ls -1r restore/$(RESTORE_DATE) |grep jenkins-credentials |head -1) ; \
@@ -128,6 +142,24 @@ restore-jenkins:
 	$(sudo) mv /opt/jenkins/identity.key.enc /opt/jenkins/identity.key.enc.backup
 	$(sudo) tar -zxvf $(jenkins_backup_dir)/jenkins-credentials.tar.gz -C /opt/jenkins/
 	$(sudo) docker-compose -p $(project) $(compose_args) up -d jenkins
+
+copy-restore-file-nexus: mkdir-restore
+	[ -d "$(nexus_restore_dir)" ] || sudo mkdir -p $(nexus_restore_dir)
+	if [ -d "restore/$(RESTORE_DATE)" ] ;then \
+          nexus_backup=$$(ls -1r restore/$(RESTORE_DATE) |grep nexus-backup |head -1) ; \
+          [ -z "$$nexus_backup" ] && exit 1 ; \
+           sudo cp restore/$(RESTORE_DATE)/$$nexus_backup $(nexus_restore_dir)/$$nexus_backup; \
+           sudo chown 200.200 $(nexus_restore_dir) ; \
+           sudo chown 200.200 $(nexus_restore_dir)/$$nexus_backup ; \
+       fi
+
+restore-nexus:
+	nexus_id=$$(docker-compose -p $(project) $(compose_args) ps -q nexus ) ;\
+		 docker cp restore_nexus_database.sh $$nexus_id:/nexus-data/
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T nexus /bin/bash -c '(  cd /nexus-data/restore && tar -zxvf nexus-backup.tar.gz *.json.gz )'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T nexus /bin/bash -c '(cd $$HOME && /nexus-data/restore_nexus_database.sh)'
+	$(sudo) docker-compose -p $(project) $(compose_args) exec -T nexus /bin/bash -c '(  cd /nexus-data/restore && rm -rf nexus-backup.tar.gz *.json.gz )'
+	$(sudo) docker-compose -p $(project) $(compose_args) restart nexus
 
 .PHONY: template build-template pull-template up-template restart-template stop-template rm-template
 # template: generate docker-compose -p $(project).out.yml from all docker-compose -p $(project) args (docker-compose -p $(project).yml + docker-compose.$env.yml)
