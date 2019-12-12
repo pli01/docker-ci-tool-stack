@@ -53,7 +53,7 @@ jenkins_backup_dir = /opt/jenkins/backups
 nexus_backup_dir = /opt/nexus-data/backup
 nexus_restore_dir = /opt/nexus-data/restore
 
-backup: backup-gitlab backup-jenkins copy-backup-file-gitlab copy-backup-file-jenkins swift-upload clean-backup
+backup: backup-gitlab backup-jenkins backup-nexus copy-backup-file-gitlab copy-backup-file-jenkins copy-backup-file-nexus swift-upload clean-backup
 
 backup-gitlab:
 	$(sudo) docker-compose -p $(project) $(compose_args) exec -T gitlab /bin/bash -c 'gitlab-ctl status'
