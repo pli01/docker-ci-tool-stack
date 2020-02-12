@@ -7,6 +7,8 @@ workdir=$rootdir/ci-tool-stack/docker-ci-tool-stack
 
 source $rootdir/proxy.sh
 source $rootdir/creds-forge-dev.sh
+
+export export SWIFTCLIENT_INSECURE=true
 cd $workdir || exit 1
 id
 pwd
